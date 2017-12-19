@@ -16,7 +16,7 @@ public struct OktaAuthorization {
 
     func authCodeFlow(_ config: [String: Any], view: UIViewController,
                       callback: @escaping (OktaTokenManager?, OktaError?) -> Void) {
-        
+
         // Discover Endpoints
         getMetadataConfig(URL(string: config["issuer"] as! String)) { oidConfig, error in
 
@@ -32,9 +32,9 @@ public struct OktaAuthorization {
                               scopes: Utils.scrubScopes(config["scopes"]),
                          redirectURL: URL(string: config["redirectUri"] as! String)!,
                         responseType: OIDResponseTypeCode,
-                additionalParameters: nil
+                additionalParameters: ["nonce" : Utils.generateNonce()]
             )
-            
+
             // Start the authorization flow
             OktaAuth.currentAuthorizationFlow = OIDAuthState.authState(byPresenting: request, presenting: view){
                 authorizationResponse, error in
