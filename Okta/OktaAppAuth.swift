@@ -52,7 +52,6 @@ public func userinfo(_ callback: @escaping ([String:Any]?, OktaError?) -> Void) 
 public func refresh() {
     // Get new tokens
     tokens?.authState?.setNeedsTokenRefresh()
-
     tokens?.authState?.performAction(freshTokens: { accessToken, idToken, error in
         if error != nil {
             print("Error fetching fresh tokens: \(error!.localizedDescription)")

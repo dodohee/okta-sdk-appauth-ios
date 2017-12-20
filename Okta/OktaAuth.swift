@@ -38,7 +38,7 @@ public struct OktaAuthorization {
             // Start the authorization flow
             OktaAuth.currentAuthorizationFlow = OIDAuthState.authState(byPresenting: request, presenting: view){
                 authorizationResponse, error in
-                
+
                 if authorizationResponse != nil {
                     // Return the tokens
                     callback(OktaTokenManager(authState: authorizationResponse), nil)
@@ -48,10 +48,10 @@ public struct OktaAuthorization {
             }
         }
     }
-    
+
     func passwordFlow(_ config: [String: Any], credentials: [String: String]?, view: UIViewController,
                       callback: @escaping (OktaTokenManager?, OktaError?) -> Void) {
-        
+
         // Discover Endpoints
         getMetadataConfig(URL(string: config["issuer"] as! String)) { oidConfig, error in
 
