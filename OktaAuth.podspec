@@ -16,4 +16,5 @@ Integrate your native app with Okta using the AppAuth library.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.dependency 'AppAuth', '~> 0.91.0'
+  s.dependency 'Vinculum', '~> 0.2.0'
 end

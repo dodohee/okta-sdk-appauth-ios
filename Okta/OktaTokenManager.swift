@@ -11,6 +11,7 @@
  */
 
 import AppAuth
+import Vinculum
 
 open class OktaTokenManager: NSObject {
     
@@ -30,22 +31,42 @@ open class OktaTokenManager: NSObject {
 
         OktaAuth.tokens = self
     }
-    
+
     public func set(value: String, forKey: String) {
         // Default to not allowing background access for keychain
         self.set(value: value, forKey: forKey, needsBackgroundAccess: false)
     }
-    
+
     public func set(value: String, forKey: String, needsBackgroundAccess: Bool) {
-        OktaKeychain.set(key: forKey, object: value, access: needsBackgroundAccess)
+        var accessibility = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+        if needsBackgroundAccess {
+            // If the device needs background keychain access, grant permission
+            accessibility = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+        }
+
+        do {
+            try Vinculum.set(key: forKey, value: value, accessibility: accessibility)
+        } catch let error {
+            // Log the error until this method is updated to throw
+            print(error.localizedDescription)
+        }
     }
-    
+
     public func get(forKey: String) -> String? {
-        return OktaKeychain.get(key: forKey)
+        // Attempt to return the string value of the stored key
+        do {
+            if let keychainItem =  try Vinculum.get(forKey) {
+                return keychainItem.getString()
+            }
+        } catch let error {
+            // Log the error until this method is updated to throw
+            print(error.localizedDescription)
+        }
+        return nil
     }
-    
+
     public func clear() {
-        OktaKeychain.removeAll()
+        Vinculum.removeAll()
         OktaAuth.tokens = nil
     }
 }
